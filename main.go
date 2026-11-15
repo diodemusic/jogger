@@ -12,7 +12,11 @@ func main() {
 		os.Exit(2)
 	}
 
-	repoPath := os.Args[1]
+	repoPath, err := filepath.Abs(os.Args[1])
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "jogger:", err)
+		os.Exit(1)
+	}
 
 	pipelinePath := filepath.Join(repoPath, ".jogger.yml")
 
@@ -25,8 +29,12 @@ func main() {
 	for i, step := range pipeline.Steps {
 		fmt.Printf("step %d: %s (image %s)\n", i+1, step.Name, step.Image)
 
-		for _, command := range step.Commands {
-			fmt.Println("  $", command)
+		err := runStep(repoPath, step)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, "jogger:", err)
+			os.Exit(1)
 		}
 	}
+
+	fmt.Println("pipeline passed")
 }
