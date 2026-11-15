@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 )
 
 func main() {
@@ -12,5 +13,20 @@ func main() {
 	}
 
 	repoPath := os.Args[1]
-	fmt.Println("repo:", repoPath)
+
+	pipelinePath := filepath.Join(repoPath, ".jogger.yml")
+
+	pipeline, err := loadPipeline(pipelinePath)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "jogger:", err)
+		os.Exit(1)
+	}
+
+	for i, step := range pipeline.Steps {
+		fmt.Printf("step %d: %s (image %s)\n", i+1, step.Name, step.Image)
+
+		for _, command := range step.Commands {
+			fmt.Println("  $", command)
+		}
+	}
 }
