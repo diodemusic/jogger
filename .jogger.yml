@@ -4,6 +4,7 @@ steps:
     commands:
       - go vet ./...
       - go test ./...
+      - "not a command"
 
   - name: build
     image: golang:1.27
