@@ -8,7 +8,7 @@ import (
 
 func main() {
 	if len(os.Args) != 2 {
-		fmt.Fprintln(os.Stderr, "usage: jogger <repo-path>")
+		fmt.Fprintln(os.Stderr, "usage: jogger <repo>")
 		os.Exit(2)
 	}
 
@@ -21,21 +21,21 @@ func main() {
 	fmt.Println("pipeline passed")
 }
 
-func run(repoPath string) error {
-	pipeline, err := loadPipeline(filepath.Join(repoPath, ".jogger.yml"))
-	if err != nil {
-		return err
-	}
-
+func run(repo string) error {
 	workspace, err := os.MkdirTemp("", "jogger-")
 	if err != nil {
 		return fmt.Errorf("create workspace: %w", err)
 	}
 	defer os.RemoveAll(workspace)
 
-	err = os.CopyFS(workspace, os.DirFS(repoPath))
+	err = cloneRepo(repo, workspace)
 	if err != nil {
-		return fmt.Errorf("copy repo to workspace: %w", err)
+		return err
+	}
+
+	pipeline, err := loadPipeline(filepath.Join(workspace, ".jogger.yml"))
+	if err != nil {
+		return err
 	}
 
 	for i, step := range pipeline.Steps {
