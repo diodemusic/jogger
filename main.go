@@ -26,6 +26,7 @@ func run(repo string) error {
 	if err != nil {
 		return fmt.Errorf("create workspace: %w", err)
 	}
+
 	defer os.RemoveAll(workspace)
 
 	err = cloneRepo(repo, workspace)
