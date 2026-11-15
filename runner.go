@@ -7,13 +7,13 @@ import (
 	"strings"
 )
 
-func runStep(repoPath string, step Step) error {
+func runStep(workspace string, step Step) error {
 	script := strings.Join(step.Commands, "\n")
 
 	cmd := exec.Command(
 		"docker", "run",
 		"--rm",
-		"--volume", repoPath+":/workspace",
+		"--volume", workspace+":/workspace",
 		"--workdir", "/workspace",
 		step.Image,
 		"sh", "-e", "-x", "-c", script,
