@@ -35,6 +35,13 @@ func TestValidate(t *testing.T) {
 			wantErr: "step 1 (test): missing image",
 		},
 		{
+			name: "image starts with dash",
+			pipeline: Pipeline{Steps: []Step{
+				{Name: "test", Image: "--privileged", Commands: []string{"go test ./..."}},
+			}},
+			wantErr: "step 1 (test): image must not start with -",
+		},
+		{
 			name: "no commands",
 			pipeline: Pipeline{Steps: []Step{
 				{Name: "test", Image: "golang:1.27"},
