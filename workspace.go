@@ -1,13 +1,14 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"os/exec"
 )
 
-func cloneRepo(repo string, workspace string) error {
-	cmd := exec.Command("git", "clone", "--quiet", repo, workspace)
+func cloneRepo(ctx context.Context, repo string, workspace string) error {
+	cmd := exec.CommandContext(ctx, "git", "clone", "--quiet", repo, workspace)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
