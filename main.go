@@ -1,8 +1,10 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
+	"os/signal"
 	"path/filepath"
 )
 
@@ -12,7 +14,16 @@ func main() {
 		os.Exit(2)
 	}
 
-	err := run(os.Args[1])
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
+	err := run(ctx, os.Args[1])
+	interrupted := ctx.Err() != nil
+	stop()
+
+	if interrupted {
+		fmt.Fprintln(os.Stderr, "jogger: interrupted")
+		os.Exit(130)
+	}
+
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "jogger:", err)
 		os.Exit(1)
@@ -21,7 +32,7 @@ func main() {
 	fmt.Println("pipeline passed")
 }
 
-func run(repo string) error {
+func run(ctx context.Context, repo string) error {
 	workspace, err := os.MkdirTemp("", "jogger-")
 	if err != nil {
 		return fmt.Errorf("create workspace: %w", err)
@@ -29,7 +40,7 @@ func run(repo string) error {
 
 	defer os.RemoveAll(workspace)
 
-	err = cloneRepo(repo, workspace)
+	err = cloneRepo(ctx, repo, workspace)
 	if err != nil {
 		return err
 	}
@@ -42,7 +53,7 @@ func run(repo string) error {
 	for i, step := range pipeline.Steps {
 		fmt.Printf("step %d: %s (image %s)\n", i+1, step.Name, step.Image)
 
-		err := runStep(workspace, step)
+		err := runStep(ctx, workspace, step)
 		if err != nil {
 			return err
 		}
