@@ -15,3 +15,7 @@ steps:
     image: golang:1.27
     commands:
       - go build ./...
+
+  - name: temp
+    - sleep 60
+  
