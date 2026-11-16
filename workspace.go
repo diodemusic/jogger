@@ -3,14 +3,14 @@ package main
 import (
 	"context"
 	"fmt"
-	"os"
+	"io"
 	"os/exec"
 )
 
-func cloneRepo(ctx context.Context, repo string, workspace string) error {
-	cmd := exec.CommandContext(ctx, "git", "clone", "--quiet", repo, workspace)
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
+func cloneRepo(ctx context.Context, out io.Writer, repo string, workspace string) error {
+	cmd := exec.CommandContext(ctx, "git", "clone", "--quiet", "--no-hardlinks", repo, workspace)
+	cmd.Stdout = out
+	cmd.Stderr = out
 
 	err := cmd.Run()
 	if err != nil {

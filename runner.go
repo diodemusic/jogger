@@ -3,13 +3,13 @@ package main
 import (
 	"context"
 	"fmt"
-	"os"
+	"io"
 	"os/exec"
 	"path/filepath"
 	"strings"
 )
 
-func runStep(ctx context.Context, workspace string, step Step) error {
+func runStep(ctx context.Context, out io.Writer, workspace string, step Step) error {
 	script := strings.Join(step.Commands, "\n")
 	containerName := filepath.Base(workspace)
 
@@ -23,8 +23,8 @@ func runStep(ctx context.Context, workspace string, step Step) error {
 		step.Image,
 		"sh", "-e", "-x", "-c", script,
 	)
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
+	cmd.Stdout = out
+	cmd.Stderr = out
 	cmd.Cancel = func() error {
 		return exec.Command("docker", "kill", containerName).Run()
 	}
