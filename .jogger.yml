@@ -9,13 +9,10 @@ steps:
   - name: test
     image: golang:1.27
     commands:
+      - sleep 60
       - go test -race ./...
 
   - name: build
     image: golang:1.27
     commands:
       - go build ./...
-
-  - name: temp
-    - sleep 60
-  
