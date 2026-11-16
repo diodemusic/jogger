@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"strings"
 
 	"go.yaml.in/yaml/v4"
 )
@@ -50,6 +51,9 @@ func validate(pipeline Pipeline) error {
 		}
 		if step.Image == "" {
 			return fmt.Errorf("step %d (%s): missing image", i+1, step.Name)
+		}
+		if strings.HasPrefix(step.Image, "-") {
+			return fmt.Errorf("step %d (%s): image must not start with -", i+1, step.Name)
 		}
 		if len(step.Commands) == 0 {
 			return fmt.Errorf("step %d (%s): no commands", i+1, step.Name)
