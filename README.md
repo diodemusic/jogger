@@ -20,6 +20,6 @@ CI pipeline runner
 
 ...
 
-## Setting up a pre-push github hook (Not yet implemented)
+## Setting up a pre-push git hook (Not yet implemented)
 
 ...
