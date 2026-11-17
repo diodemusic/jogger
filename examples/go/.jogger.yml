@@ -2,12 +2,14 @@ steps:
   - name: lint
     image: golang:1.27
     commands:
+      - test -z "$(gofmt -l .)"
+      - go mod tidy -diff
       - go vet ./...
 
   - name: test
     image: golang:1.27
     commands:
-      - go test ./...
+      - go test -race ./...
 
   - name: build
     image: golang:1.27
