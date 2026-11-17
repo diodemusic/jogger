@@ -2,28 +2,24 @@
 
 CI pipeline runner
 
-## Installation
+## Installation (Not yet implemented)
 
-### MacOS
-
-```sh
-brew install jogger
-```
-
-### Linux
+### MacOS (Not yet implemented)
 
 ...
 
-### Windows
+### Linux (Not yet implemented)
 
 ...
 
-## usage
+### Windows (Not yet implemented)
 
-```sh
-jogger .
-```
+...
 
-## Setting up a pre-push github hook
+## usage (Not yet implemented)
+
+...
+
+## Setting up a pre-push github hook (Not yet implemented)
 
 ...
