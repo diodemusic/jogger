@@ -23,3 +23,7 @@ brew install jogger
 ```sh
 jogger .
 ```
+
+## Setting up a pre-push github hook
+
+...
